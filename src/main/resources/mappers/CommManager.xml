@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cykj.mapper.CommMapper">
+
+    <!--     int addComm(@Param("areaId") Integer areaId,
+                    @Param("comName") String comName,
+                    @Param("address") String address,
+                    @Param("comImage") String comImage,
+                    @Param("parkingNum") Integer parkingNum);-->
+    <insert id="addComm">
+        insert into tb_community values(null, #{areaId}, #{comName}, #{address}, #{comImage}, #{parkingNum}, '存在')
+    </insert>
+
+    <!--    int updateComm(
+                @Param("comId") Integer comId,
+                @Param("comName") String comName, @Param("address") String address,
+                @Param("comImage") String comImage, @Param("parkingNum") Integer parkingNum);-->
+    <update id="updateComm">
+        update tb_community set communityName=#{comName}, address=#{address}, comimages=#{comImage}, parkingNum=#{parkingNum}
+        where communityId = #{comId}
+    </update>
+
+    <update id="delCom">
+        UPDATE tb_community set comState = '已删除' where communityId =  #{comId}
+    </update>
+
+    <update id="delHouse">
+        UPDATE tb_house set remark = '已删除' where tocommunityId =  #{comId}
+    </update>
+
+    <select id="selectComId" resultType="com.cykj.bean.TbHouse">
+        select * from tb_house where tocommunityId = #{comId} and remark = '已分配'
+    </select>
+
+    <select id="getHouseList" resultType="com.cykj.bean.TbHouse">
+        select * from tb_house where tocommunityId = #{comId}
+    </select>
+
+    <insert id="addHouse">
+        insert into tb_house values
+        <foreach collection="houseList" item="house" separator=",">
+            (null, #{comId}, #{house.buildingNum}, #{house.houseNum}, #{house.houseArea}, #{house.money},
+            #{house.roomNum}, #{house.washroomNum}, #{house.livingroomNum}, #{house.kitchenNum}, #{house.balconyNum},
+            '未发布', #{house.images})
+        </foreach>
+    </insert>
+
+</mapper>

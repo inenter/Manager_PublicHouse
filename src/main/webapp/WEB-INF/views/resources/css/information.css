@@ -1,0 +1,202 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+.de {
+	width: 1300px;
+}
+
+.detail {
+	background-color: #f2f3f5;
+	box-shadow: darkgrey 0px 10px 30px 5px;
+	margin-bottom: 50px;
+}
+
+.detail-con {
+	width: 100%;
+	background-color: white;
+}
+
+.title {
+	width: 100%;
+	margin: 10px;
+	font-size: 23px;
+}
+
+.show {
+	align-items: center;
+	text-align: center;
+	font-size: 20px;
+}
+
+table {
+	margin: 0 auto;
+	font-size: 20px !important;
+	text-align: center !important;
+}
+
+td {
+	padding: 10px;
+}
+
+.show input {
+	text-indent: 0;
+	width: 160px;
+	height: 30px;
+	text-align: center;
+	outline: none;
+}
+
+#idCard {
+	width: 235px;
+}
+
+#birth {
+	width: 180px;
+}
+
+.show select {
+	width: 180px;
+	outline: none;
+}
+
+#uploadCard,
+#uploadBook,
+#uploadCer,
+#uploadCardFont,
+#uploadBookFont {
+	width: 160px;
+	height: 30px;
+	line-height: 30px;
+	border: 1px solid black;
+	cursor: pointer;
+
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+#uploadBook {
+	width: 230px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+#uploadCer {
+	width: 180px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.upload {
+	width: 180px;
+	height: 30px;
+	line-height: 30px;
+	border: 1px solid black;
+	cursor: pointer;
+	
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+textarea {
+	width: 800px;
+	resize: none;
+	overflow-x: hidden;
+	outline: none;
+}
+
+.show-sen {
+	width: 1300px;
+	padding-bottom: 20px;
+	display: none;
+	/* 消失 */
+}
+
+.fam {
+	font-size: 16px;
+}
+
+.show span {
+	width: 80px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.fam {
+	margin-top: 20px;
+	margin-left: 70px;
+	margin-bottom: 10px;
+	padding: 6px;
+}
+
+.btns {
+	padding: 0 5px;
+	height: 30px;
+	line-height: 30px;
+	font-size: 16px;
+}
+
+.save {
+	margin: 0 auto;
+}
+
+.save button {
+	width: 80px;
+	padding: 5px 10px;
+	background-color: #90EE90;
+	outline: none;
+	text-align: center;
+	font-size: 16px;
+	margin: 0 20px;
+	margin-bottom: 20px;
+	border-radius: 8px;
+}
+
+.btn {
+	border-radius: 8px;
+}
+
+.showData {
+	align-items: center;
+	text-align: center;
+	font-size: 20px;
+}
+
+.modal {
+	text-align: center;
+}
+
+.modal:after {
+	display: inline-block;
+	height: 100%;
+	margin-left: -0.05em;
+	content: "";
+	vertical-align: middle;
+}
+
+.modal-dialog {
+	/* text-align: left; */
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.uploadImg {
+	width: 150px;
+	height: 100px;
+}
+
+button {
+	background-color: #f2f3f5;
+}
+
+#selected{
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}

@@ -1,0 +1,34 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.layui-form {
+    /* width: 1320px !important; */
+}
+
+.layui-table-cell {
+    text-align: center;
+    align-items: center;
+}
+
+/* .layui-table-body {
+	height: 378px !important;
+} */
+
+.layui-table-page {
+    text-align: center;
+}
+
+.layui-layout-admin .layui-logo {
+    font-size: 22px;
+}
+
+.layui-nav-tree .layui-nav-item > a {
+    font-size: 20px;
+}
+
+.layui-nav-tree .layui-nav-item {
+    text-align: center;
+}
+

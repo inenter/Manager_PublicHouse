@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cykj.mapper.HouseMapper">
+
+    <select id="getCommList" resultType="com.cykj.bean.TbCommunity">
+        select * from tb_community where toareaId = #{toareaId}
+    </select>
+
+    <select id="getRidgeList" resultType="com.cykj.bean.TbHouse">
+        select DISTINCT buildingNum from tb_house where tocommunityId = #{comId}
+    </select>
+
+    <insert id="addHouse">
+        insert into tb_house value(null, #{tocommunityId}, #{buildingNum}, #{houseNum},
+        #{houseArea}, #{money}, #{roomNum}, #{washroomNum}, #{livingroomNum},
+        0, #{balconyNum}, '未发布', #{images})
+    </insert>
+
+    <select id="findHouseNum" resultType="com.cykj.bean.TbHouse">
+        select * from tb_house where tocommunityId=#{comId} and buildingNum=#{buildingNum} and houseNum=#{houseNum}
+    </select>
+
+    <update id="delHouse">
+        update tb_house set remark = '已删除' where houseId=#{houseId}
+    </update>
+
+    <update id="releaseHouse">
+        update tb_house set remark = #{houseRemark} where houseId=#{houseId}
+    </update>
+
+    <update id="updateHouse">
+        update tb_house set images=#{images},
+        buildingNum=#{buildingNum},houseNum=#{houseNum},
+        money=#{money},houseArea=#{houseArea},roomNum=#{roomNum},
+        washroomNum=#{washroomNum},livingroomNum=#{livingroomNum},balconyNum=#{balconyNum}
+        where houseId=#{houseId}
+    </update>
+
+</mapper>

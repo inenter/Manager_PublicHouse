@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cykj.mapper.AreaMapper">
+
+    <select id="getAreaList" resultType="com.cykj.bean.AreaManager">
+        SELECT DISTINCT c.areaId townId, a.areaName provName, b.areaName cityName, c.areaName townName,
+        ( SELECT count(*) FROM tb_community WHERE c.areaId = toareaId AND comState != '已删除' ) comCount,
+        c.remark
+        <if test="action == 'comm'">
+            ,com.communityId comId,
+            com.communityName comName,
+            com.address,
+            com.comimages comImage,
+            com.parkingNum
+        </if>
+        <if test="action == 'house' or action == 'allotHouse'">
+            ,com.communityName comName,h.houseId,h.buildingNum,h.houseNum,h.houseArea, h.money ,h.roomNum,h.washroomNum,h.livingroomNum, h.balconyNum,h.remark houseRemark,h.images houseImg
+        </if>
+        FROM tb_area a
+        INNER JOIN tb_area b ON a.areaId = b.pid
+        INNER JOIN tb_area c ON b.areaId = c.pid
+        <if test="action == 'comm' or action == 'house' or action == 'allotHouse'">
+            LEFT JOIN tb_community com ON com.toareaId = c.areaId
+        </if>
+        <if test="action == 'house' or action == 'allotHouse'">
+            INNER JOIN tb_house h ON h.tocommunityId = com.communityId
+        </if>
+        where c.remark != '已删除'
+        <if test="action == 'house'">
+            and h.remark != '已删除'
+        </if>
+        <if test="action == 'allotHouse'">
+            and h.remark = '已发布'
+        </if>
+        <trim prefix="and" suffixOverrides="and || or">
+            <if test="provId != null and provId != ''">
+                a.areaId = #{provId} and
+            </if>
+            <if test="cityId != null and cityId != ''">
+                b.areaId = #{cityId} and
+            </if>
+            <if test="communityName != null and communityName != ''">
+                c.areaName like '%${communityName}%' and
+            </if>
+            <if test="action == 'comm'">
+                <if test="areaId != null and areaId != ''">
+                    com.toareaId = #{areaId} and
+                </if>
+                <if test="comName != null and comName != ''">
+                    com.communityName LIKE '%${comName}%'
+                </if>
+            </if>
+            <if test="action == 'house'">
+                <if test="toareaId != null and toareaId != ''">
+                    c.areaId = #{toareaId} and
+                </if>
+                <if test="comId != null and comId != ''">
+                    com.communityId = #{comId} and
+                </if>
+                <if test="buildingNum != null and buildingNum != ''">
+                    h.buildingNum = #{buildingNum} and
+                </if>
+                <if test="houseRemark != null and houseRemark != ''">
+                    h.remark = #{houseRemark} and
+                </if>
+                <if test="houseNum != null and houseNum != ''">
+                    h.houseNum like '%${houseNum}%' and
+                </if>
+                <if test=" minArea != null and minArea != '' and (maxArea == null or maxArea == '')">
+                    h.houseArea &gt;= #{minArea} and
+                </if>
+                <if test=" maxArea != null and maxArea != ''  and (minArea == null or minArea == '')">
+                    h.houseArea &lt;= #{maxArea} and
+                </if>
+                <if test="maxArea == 0">
+                    h.houseArea &lt;= 0 and
+                </if>
+                <if test="minArea != null and minArea != '' and maxArea != null and maxArea != ''">
+                    h.houseArea BETWEEN #{minArea} and #{maxArea}
+                </if>
+            </if>
+        </trim>
+    </select>
+
+    <select id="selectArea" resultType="com.cykj.bean.TbArea">
+        select * from tb_area where pid=#{pid}
+    </select>
+
+    <delete id="delTown">
+        update tb_area set remark='已删除' where areaId=#{areaId}
+    </delete>
+
+    <delete id="delCom">
+        update tb_community set comState = '已删除' where toareaId = #{toareaId}
+    </delete>
+
+    <!--    int delAll(@Param("idsArray") List<Integer> integers);-->
+    <delete id="delAll">
+        update tb_area set remark='已删除' where
+        <foreach collection="idsArray" item="id" separator="or">
+            areaId = #{id}
+        </foreach>
+    </delete>
+    <!--    int delAllCom(@Param("comIds") List<Integer> integers);-->
+    <delete id="delAllCom">
+        update tb_community set comState = '已删除' where
+        <foreach collection="comIds" item="id" separator="or">
+            toareaId = #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectAreaIdByCityName" resultType="java.lang.Integer">
+        select areaId from tb_area where areaName = #{cityName}
+    </select>
+
+    <insert id="addArea">
+        insert into tb_area values(null, #{areaName}, #{pid}, '存在')
+    </insert>
+
+    <update id="updateArea">
+        update tb_area set areaName = #{areaName} where areaId=#{areaId}
+    </update>
+
+</mapper>

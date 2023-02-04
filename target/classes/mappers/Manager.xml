@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cykj.mapper.ManagerMapper">
+
+    <select id="login" resultType="com.cykj.bean.TbManager">
+        select * from tb_manager where managerAcc=#{acc} and managerPwd=#{pwd}
+    </select>
+
+    <select id="getRight" resultType="com.cykj.bean.TbRight">
+        SELECT r.* FROM tb_right r
+        LEFT JOIN tb_role_right t ON r.rightId = t.rightId
+        LEFT JOIN tb_role e ON t.roleId = e.roleId
+        WHERE e.roleId = (SELECT roleId FROM tb_manager WHERE managerAcc = #{acc})
+    </select>
+
+    <select id="getRoleId" resultType="java.lang.Integer">
+        SELECT roleId FROM tb_manager WHERE managerAcc = #{acc}
+    </select>
+
+    <select id="getPerson" resultType="com.cykj.bean.TbManager">
+        SELECT a.managerId,a.managerName,b.roleId,b.roleName,a.managerState
+        FROM tb_manager a
+        LEFT JOIN tb_role b ON a.roleId = b.roleId where b.roleName != '管理员' and a.managerState != '已删除'
+        <if test="name != null and name != ''">
+            and a.managerName = #{name}
+        </if>
+        <if test="acc != null and acc != ''">
+            and a.managerAcc = #{acc}
+        </if>
+        <if test="roleId != null and roleId != ''">
+            and b.roleId = #{roleId}
+        </if>
+        <if test="state != null and state != ''">
+            and a.managerState = #{state}
+        </if>
+    </select>
+
+    <update id="updateData">
+        update tb_manager
+        <if test="updateRole != null and updateRole != ''">
+            set roleId=#{updateRole}
+        </if>
+        <if test="updateRole == null and resetPwd == null">
+            <if test="managerState == null">
+                set managerState='已删除'
+            </if>
+            <if test="managerState != null and managerState != ''">
+                set managerState=#{managerState}
+            </if>
+        </if>
+        <if test="resetPwd != null and resetPwd != ''">
+            set managerPwd='123456'
+        </if>
+        where managerId=#{managerId}
+    </update>
+
+    <select id="getManager" resultType="com.cykj.bean.TbManager">
+        select * from tb_manager where managerId=#{managerId} and managerPwd=#{managerPwd}
+    </select>
+
+    <update id="updatePwd">
+        update tb_manager set managerPwd=#{managerPwd} where managerId=#{managerId}
+    </update>
+
+    <select id="getPower" resultType="com.cykj.bean.Power">
+        SELECT tb_right.rightId, tb_right.rightName, tb_role_right.roleId FROM tb_right LEFT JOIN tb_role_right ON
+        tb_right.rightId = tb_role_right.rightId
+    </select>
+
+    <delete id="delPower">
+        delete from tb_role_right where roleId=#{roleId}
+    </delete>
+
+    <insert id="addPower">
+        insert into tb_role_right values
+        <foreach collection="rightId" item="r" separator=",">
+            (null, #{roleId}, #{r})
+        </foreach>
+    </insert>
+
+    <select id="findPerson" resultType="com.cykj.bean.TbManager">
+        select * from tb_manager where managerAcc=#{acc}
+    </select>
+
+    <insert id="addPerson">
+        insert into tb_manager values(null, #{roleId}, #{acc}, #{pwd}, #{name}, '启用')
+    </insert>
+
+
+</mapper>

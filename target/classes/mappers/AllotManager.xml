@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cykj.mapper.AllotMapper">
+
+    <select id="getAllotList" resultType="com.cykj.bean.TbDistribute">
+        SELECT a.applyId,a.renterId,a.applyName,a.areaName,a.familySum,a.familyIncome,a.applyTime,d.*,h.houseId,h.buildingNum,h.houseNum,h.remark
+        FROM tb_check c
+        INNER JOIN tb_apply a on a.applyId = c.applyId and c.checkState = '已通过'
+        LEFT JOIN tb_distribute d on a.renterId = d.renterId and d.dataState != '未保存'
+        LEFT JOIN tb_house h on d.houseId = h.houseId
+        WHERE 1=1
+        <if test="areaName != null and areaName != ''">
+            and a.areaName = #{areaName}
+        </if>
+        <if test="state != null and state != ''">
+            and h.remark = #{state}
+        </if>
+        <if test="name != null and name != ''">
+            and a.applyName LIKE '%${name}%'
+        </if>
+        <if test="personNum != null and personNum != ''">
+            and a.familySum LIKE '%${personNum}%'
+        </if>
+    </select>
+
+    <insert id="saveAllot">
+        insert into tb_distribute values(null, #{houseId}, #{renterId}, '未保存')
+    </insert>
+
+    <delete id="delAllot">
+        delete from tb_distribute where renterId=#{renterId}
+    </delete>
+
+    <update id="submitAllot">
+        update tb_distribute set dataState='保存' where renterId in (
+        <foreach collection="allot" item="a" separator=",">
+            #{a.renterId}
+        </foreach>
+        )
+    </update>
+
+    <update id="updateHouse">
+        update tb_house set remark = '已分配' where houseId in (
+        <foreach collection="allot" item="a" separator=",">
+            #{a.houseId}
+        </foreach>
+        )
+    </update>
+
+    <delete id="delEveryAllot">
+<!--        delete from tb_distribute where houseId in (-->
+<!--        <foreach collection="allot" item="a" separator=",">-->
+<!--            #{a}-->
+<!--        </foreach>-->
+<!--        )-->
+        delete from tb_distribute where dataState='未保存'
+    </delete>
+
+</mapper>

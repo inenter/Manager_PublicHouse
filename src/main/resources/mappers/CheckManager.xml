@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cykj.mapper.CheckMapper">
+
+    <select id="getCheckList" resultType="com.cykj.bean.TbCheck">
+        SELECT tb_check.*, applyName, familyIncome, houseArea, areaName, renterId, applyTime
+        FROM tb_apply, tb_check
+        WHERE tb_apply.applyId = tb_check.checkId and applyState = '提交'
+        <if test="areaName != null and areaName != ''">
+            and areaName=#{areaName}
+        </if>
+        <if test="applyName != null and applyName != ''">
+            and applyName LIKE '%${applyName}%'
+        </if>
+        <if test="checkState != null and checkState != ''">
+            and checkState = #{checkState}
+        </if>
+    </select>
+
+    <update id="checkInfo">
+        update tb_check set checkState=#{checkState} where checkId=#{checkId}
+    </update>
+
+    <insert id="addCheckInformation">
+        insert into tb_message values(null, #{renterId}, #{managerId}, #{creatTime}, #{messageText}, '未读')
+    </insert>
+
+    <select id="selectApplyById" resultType="com.cykj.bean.TbApply">
+        select * from tb_apply where renterId=#{renterId}
+    </select>
+
+    <select id="selectFamilyById" resultType="com.cykj.bean.TbFamily">
+        select * from tb_family where renterId=#{renterId}
+    </select>
+
+</mapper>
